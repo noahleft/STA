@@ -7,12 +7,19 @@
 //
 
 #include <iostream>
+#include "libraryParser.h"
+using namespace std;
+
+DelayLibrary library;
 
 int main(int argc, const char * argv[])
 {
-
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    string DelayLibrary="nctu_18.tech";
+    
+    if (library.InitialLibrary(DelayLibrary)==0) {
+        return -1;
+    }
+    
     return 0;
 }
 
