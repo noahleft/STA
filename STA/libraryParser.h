@@ -12,22 +12,28 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <map>
 
 class DelayLibrary {
 private:
-    FILE *pFile;
+    struct GATE {
+        std::string name;
+        double delay_rise;
+        double delay_fall;
+        double delay_fanout;
+        
+    };
     
+    FILE *pFile;
+    std::map<std::string,GATE*> LookupTable;
     
     void Parser();
+    void AllocGate(std::string Name,double delay_r,double delay_f,double delay_fanout);
     
 public:
-    DelayLibrary(std::string filename) {
-        pFile = fopen(filename.c_str(), "r");
-        if (pFile==NULL) {
-            std::cout<<filename<<" doesn't exist."<<std::endl;
-            exit(-1);
-        }
-    }
+    DelayLibrary(){}
+    ~DelayLibrary();
+    int InitialLibrary(std::string filename);
 };
 
 #endif /* defined(__STA__libraryParser__) */
