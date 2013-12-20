@@ -8,9 +8,11 @@
 
 #include <iostream>
 #include "libraryParser.h"
+#include "circuitParser.h"
 using namespace std;
 
 DelayLibrary library;
+CIRCUIT circuit;
 
 int main(int argc, const char * argv[])
 {
@@ -22,9 +24,9 @@ int main(int argc, const char * argv[])
         return -1;
     }
     
-    string Circuit="c17.bench";
+    string CircuitFile="c17.bench";
     
-    int Status_Circuit=0;
+    int Status_Circuit=circuit.InitialCircuit(CircuitFile);
     if (Status_Circuit==0) {
         cout<<"You shall check circuit file name or path please."<<endl;
         return -1;
