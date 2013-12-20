@@ -16,7 +16,17 @@ int main(int argc, const char * argv[])
 {
     string DelayLibrary="nctu_18.tech";
     
-    if (library.InitialLibrary(DelayLibrary)==0) {
+    int Status_DelayLibrary=library.InitialLibrary(DelayLibrary);
+    if (Status_DelayLibrary==0) {
+        cout<<"You shall check library file name or path please."<<endl;
+        return -1;
+    }
+    
+    string Circuit="c17.bench";
+    
+    int Status_Circuit=0;
+    if (Status_Circuit==0) {
+        cout<<"You shall check circuit file name or path please."<<endl;
         return -1;
     }
     
