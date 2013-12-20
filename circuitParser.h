@@ -18,7 +18,7 @@
 
 class CIRCUIT {
 private:
-    enum GATEFUNC{G_PI,G_PO,G_AND,G_OR,G_BUF};
+    enum GATEFUNC{G_PI,G_PO,G_AND,G_OR,G_BUF,G_XOR};
     struct GATE{
         std::string name;
         bool IsInv;
