@@ -43,7 +43,7 @@ void ExtractData(std::string &str) {
             if (isAlpha) {
                 isAlpha=false;
             }
-            else str.erase(i);
+            else str.erase(i,1);
         }
         else {
             isAlpha=true;
