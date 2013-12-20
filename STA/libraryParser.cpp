@@ -16,11 +16,12 @@ DelayLibrary::~DelayLibrary() {
 }
 
 int DelayLibrary::InitialLibrary(std::string filename) {
-    pFile = fopen(filename.c_str(), "r");
-    if (pFile==NULL) {
+    
+    if (fopen(filename.c_str(), "r")==NULL) {
         std::cout<<filename<<" doesn't exist."<<std::endl;
         return 0;
     }
+    infile.open(filename.c_str());
     Parser();
     return 1;
 }
@@ -34,6 +35,42 @@ void DelayLibrary::AllocGate(std::string name, double r, double f, double fanout
     LookupTable[name]=gate;
 }
 
+void ExtractData(std::string &str) {
+    bool isAlpha=false;
+    for (int i=0; i<str.size(); i++) {
+        if (str[i]==' ') {str[i]='\t';}
+        if (str[i]=='\t') {
+            if (isAlpha) {
+                isAlpha=false;
+            }
+            else str.erase(i);
+        }
+        else {
+            isAlpha=true;
+        }
+    }
+}
+
 void DelayLibrary::Parser() {
+    std::string str;
+    while (!infile.eof()) {
+        getline(infile,str);
+        if (str.length()==0) {continue;}
+        ExtractData(str);
+        
+        std::string::size_type idx=str.find('\t');
+        
+        std::string Name=str.substr(0,idx);
+        str=str.substr(idx+1);
+        idx=str.find('\t');
+        double delay_rise=atof(str.substr(0,idx).c_str());
+        str=str.substr(idx+1);
+        idx=str.find('\t');
+        double delay_fall=atof(str.substr(0,idx).c_str());
+        str=str.substr(idx+1);
+        double delay_fanout=atof(str.c_str());
+        
+        AllocGate(Name, delay_rise, delay_fall, delay_fanout);
+    }
     
 }

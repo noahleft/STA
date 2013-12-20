@@ -10,6 +10,7 @@
 #define __STA__libraryParser__
 
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <string>
 #include <map>
@@ -24,7 +25,7 @@ private:
         
     };
     
-    FILE *pFile;
+    std::ifstream infile;
     std::map<std::string,GATE*> LookupTable;
     
     void Parser();
