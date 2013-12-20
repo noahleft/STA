@@ -35,6 +35,9 @@ public:
     DelayLibrary(){}
     ~DelayLibrary();
     int InitialLibrary(std::string filename);
+    double GetRiseDelay(std::string gatename);
+    double GetFallDelay(std::string gatename);
+    double GetFanoutDelay(std::string gatename);
 };
 
 #endif /* defined(__STA__libraryParser__) */

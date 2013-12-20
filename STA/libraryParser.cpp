@@ -74,3 +74,17 @@ void DelayLibrary::Parser() {
     }
     
 }
+
+
+double DelayLibrary::GetRiseDelay(std::string gatename) {
+    return LookupTable[gatename]->delay_rise;
+}
+
+double DelayLibrary::GetFallDelay(std::string gatename) {
+    return LookupTable[gatename]->delay_fall;
+}
+
+double DelayLibrary::GetFanoutDelay(std::string gatename) {
+    return LookupTable[gatename]->delay_fanout;
+}
+
