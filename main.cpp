@@ -12,7 +12,7 @@
 using namespace std;
 
 DelayLibrary library;
-CircuitLibrary design;
+CircuitLibrary designLibrary;
 
 int main(int argc, const char * argv[])
 {
@@ -26,7 +26,7 @@ int main(int argc, const char * argv[])
     
     string CircuitFile="c17.bench";
     
-    int Status_Circuit=design.InitialCircuit(CircuitFile);
+    int Status_Circuit=designLibrary.InitialCircuit(CircuitFile);
     if (Status_Circuit==0) {
         cout<<"You shall check circuit file name or path please."<<endl;
         return -1;
