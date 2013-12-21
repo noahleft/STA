@@ -8,7 +8,7 @@
 
 #ifndef __StaticTimingAnalysis__gate__
 #define __StaticTimingAnalysis__gate__
-
+#include "circuitParser.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -19,6 +19,8 @@ private:
     std::string name;
     std::vector<GATE*> Fanin;
     std::vector<GATE*> Fanout;
+    CircuitLibrary::GATEFUNC Func;
+    bool IsInv;
     
     double arrivalTime;
     double requireTime;
@@ -30,8 +32,42 @@ public:
     
     void AddFanin(GATE* ptr){Fanin.push_back(ptr);ptr->Fanout.push_back(this);}
     GATE* GetFanin(unsigned idx){return Fanin[idx];}
+    void SetFunc(CircuitLibrary::GATEFUNC func){Func=func;}
+    void SetInv(bool inv){IsInv=inv;}
+    void SetRiseDelay(double d){riseDelay=d;}
+    void SetFallDelay(double d){fallDelay=d;}
     
     std::string GetName(){return name;}
+    unsigned No_Fanout(){return (unsigned)Fanout.size();}
+    std::string GetFunc(){
+        switch (Func) {
+            case CircuitLibrary::G_AND:
+                if (IsInv) {return "NAND";}
+                else return "AND";
+                break;
+            case CircuitLibrary::G_OR:
+                if (IsInv) {return "NOR";}
+                else return "OR";
+                break;
+            case CircuitLibrary::G_BUF:
+                if (IsInv) {return "NOT";}
+                else return "BUFF";
+                break;
+            case CircuitLibrary::G_XOR:
+                if (IsInv) {return "XNOR";}
+                else return "XOR";
+                break;
+            case CircuitLibrary::G_PI:
+                return "INPUT";
+                break;
+            case CircuitLibrary::G_PO:
+                return "OUTPUT";
+                break;
+            default:
+                return "";
+                break;
+        }
+    }
 };
 
 #endif /* defined(__StaticTimingAnalysis__gate__) */

@@ -29,7 +29,8 @@ void CIRCUIT::LoadDesign(CircuitLibrary &design) {
             NameToGATE[ptr->name]=gate;
         }
         
-        
+        gate->SetFunc(ptr->Func);
+        gate->SetInv(ptr->IsInv);
         netlist.push_back(gate);
         if (ptr->Func==CircuitLibrary::G_PI) {
             PIlist.push_back(gate);
@@ -51,3 +52,19 @@ void CIRCUIT::LoadDesign(CircuitLibrary &design) {
         }
     }
 }
+
+void CIRCUIT::CalculateGateDelay(DelayLibrary &delayLibrary) {
+    for (unsigned i=0; i<No_Gate(); i++) {
+        GATE* gate=netlist[i];
+        std::string gateFunc=gate->GetFunc();
+        unsigned FanoutNum=gate->No_Fanout();
+        double UnitFanoutDelay=delayLibrary.GetFanoutDelay(gateFunc);
+        double RiseDelay=delayLibrary.GetRiseDelay(gateFunc);
+        double FallDelay=delayLibrary.GetFallDelay(gateFunc);
+        gate->SetRiseDelay(RiseDelay+UnitFanoutDelay*FanoutNum);
+        gate->SetFallDelay(FallDelay+UnitFanoutDelay*FanoutNum);
+    }
+}
+
+
+

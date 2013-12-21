@@ -36,7 +36,7 @@ int main(int argc, const char * argv[])
     }
     
     circuit.LoadDesign(designLibrary);
-    
+    circuit.CalculateGateDelay(library);
     
     Fileout();
     return 0;

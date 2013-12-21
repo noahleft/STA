@@ -10,6 +10,7 @@
 #define __StaticTimingAnalysis__circuit__
 #include "gate.h"
 #include "circuitParser.h"
+#include "libraryParser.h"
 #include <iostream>
 
 class CIRCUIT {
@@ -25,6 +26,7 @@ public:
     ~CIRCUIT();
     
     void LoadDesign(CircuitLibrary &);
+    void CalculateGateDelay(DelayLibrary &);
     
     unsigned No_PI(){return (unsigned)PIlist.size();}
     unsigned No_PO(){return (unsigned)POlist.size();}
