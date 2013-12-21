@@ -121,6 +121,7 @@ void CIRCUIT::Levelization() {
         if (MaxLevel<netlist[i]->GetLevel()) {
             MaxLevel=netlist[i]->GetLevel();
         }
+        netlist[i]->ResetScheduled();
     }
     MaxLevel++;
 }
