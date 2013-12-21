@@ -29,6 +29,7 @@ private:
     
     std::ifstream infile;
     std::map<std::string,GATE*> CircuitMap;
+    std::vector<GATE*> netlist;
     
     void Parser();
     void AllocGate(std::string Name,std::string Func,std::string Fanin);

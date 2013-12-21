@@ -37,6 +37,8 @@ void CIRCUIT::AllocGate(std::string Name, std::string Func, std::string Fanin) {
         gate->name=Name;
     }
     
+    netlist.push_back(gate);
+    
     //decode func
     {
         if (Func.compare("AND")==0) {gate->Func=G_AND; gate->IsInv=false;}
