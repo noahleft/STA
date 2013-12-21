@@ -8,14 +8,14 @@
 
 #include "circuitParser.h"
 
-CIRCUIT::~CIRCUIT() {
+CircuitLibrary::~CircuitLibrary() {
     std::map<std::string, GATE*>::iterator iter;
     for (iter=CircuitMap.begin(); iter!=CircuitMap.end(); iter++) {
         delete iter->second;
     }
 }
 
-int CIRCUIT::InitialCircuit(std::string filename) {
+int CircuitLibrary::InitialCircuit(std::string filename) {
     
     if (fopen(filename.c_str(), "r")==NULL) {
         std::cout<<filename<<" doesn't exist"<<std::endl;
@@ -26,7 +26,7 @@ int CIRCUIT::InitialCircuit(std::string filename) {
     return 1;
 }
 
-void CIRCUIT::AllocGate(std::string Name, std::string Func, std::string Fanin) {
+void CircuitLibrary::AllocGate(std::string Name, std::string Func, std::string Fanin) {
     GATE* gate;
     if (CircuitMap.find(Name)!=CircuitMap.end()) {
         gate=CircuitMap[Name];
@@ -90,7 +90,7 @@ void EraseSpaceAndTab(std::string &str) {
     }
 }
 
-void CIRCUIT::Parser() {
+void CircuitLibrary::Parser() {
     std::string str;
     std::string::size_type idx;
     while (!infile.eof()) {

@@ -16,7 +16,7 @@
 #include <map>
 #include <fstream>
 
-class CIRCUIT {
+class CircuitLibrary {
 private:
     enum GATEFUNC{G_PI,G_PO,G_AND,G_OR,G_BUF,G_XOR};
     struct GATE{
@@ -35,8 +35,8 @@ private:
     void AllocGate(std::string Name,std::string Func,std::string Fanin);
     
 public:
-    CIRCUIT(){}
-    ~CIRCUIT();
+    CircuitLibrary(){}
+    ~CircuitLibrary();
     int InitialCircuit(std::string filename);
 };
 

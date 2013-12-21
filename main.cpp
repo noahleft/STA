@@ -12,7 +12,7 @@
 using namespace std;
 
 DelayLibrary library;
-CIRCUIT circuit;
+CircuitLibrary circuit;
 
 int main(int argc, const char * argv[])
 {
