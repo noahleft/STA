@@ -26,6 +26,11 @@ public:
     
     void LoadDesign(CircuitLibrary &);
     
+    unsigned No_PI(){return (unsigned)PIlist.size();}
+    unsigned No_PO(){return (unsigned)POlist.size();}
+    unsigned No_Gate(){return (unsigned)netlist.size();}
+    
+    GATE* PO_Gate(unsigned idx){return POlist[idx];}
 };
 
 #endif /* defined(__StaticTimingAnalysis__circuit__) */

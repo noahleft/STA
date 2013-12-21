@@ -9,10 +9,13 @@
 #include <iostream>
 #include "libraryParser.h"
 #include "circuitParser.h"
+#include "circuit.h"
 using namespace std;
 
 DelayLibrary library;
 CircuitLibrary designLibrary;
+CIRCUIT circuit;
+void Fileout();
 
 int main(int argc, const char * argv[])
 {
@@ -32,6 +35,19 @@ int main(int argc, const char * argv[])
         return -1;
     }
     
+    circuit.LoadDesign(designLibrary);
+    
+    
+    Fileout();
     return 0;
 }
 
+void Fileout() {
+    cout<<circuit.No_PI()<<" "<<circuit.No_PO()<<" "<<circuit.No_Gate()-circuit.No_PI()-circuit.No_PO()<<endl;
+    
+    for (unsigned i=0; i<circuit.No_PO(); i++) {
+        GATE* gate=circuit.PO_Gate(i)->GetFanin(0);
+        cout<<gate->GetName();
+        cout<<endl;
+    }
+}

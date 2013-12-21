@@ -22,9 +22,16 @@ private:
     
     double arrivalTime;
     double requireTime;
+    double riseDelay;
+    double fallDelay;
     
 public:
+    GATE(std::string n):name(n),arrivalTime(0),requireTime(0),riseDelay(0),fallDelay(0){}
     
+    void AddFanin(GATE* ptr){Fanin.push_back(ptr);ptr->Fanout.push_back(this);}
+    GATE* GetFanin(unsigned idx){return Fanin[idx];}
+    
+    std::string GetName(){return name;}
 };
 
 #endif /* defined(__StaticTimingAnalysis__gate__) */
