@@ -37,6 +37,7 @@ int main(int argc, const char * argv[])
     
     circuit.LoadDesign(designLibrary);
     circuit.CalculateGateDelay(library);
+    circuit.Levelization();
     
     Fileout();
     return 0;

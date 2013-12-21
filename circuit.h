@@ -12,6 +12,7 @@
 #include "circuitParser.h"
 #include "libraryParser.h"
 #include <iostream>
+#include <queue>
 
 class CIRCUIT {
 private:
@@ -19,6 +20,8 @@ private:
     std::vector<GATE*> PIlist;
     std::vector<GATE*> POlist;
     std::vector<GATE*> netlist;
+    std::queue<GATE*> queue;
+    unsigned MaxLevel;
     
 public:
     
@@ -27,6 +30,7 @@ public:
     
     void LoadDesign(CircuitLibrary &);
     void CalculateGateDelay(DelayLibrary &);
+    void Levelization();
     
     unsigned No_PI(){return (unsigned)PIlist.size();}
     unsigned No_PO(){return (unsigned)POlist.size();}

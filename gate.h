@@ -21,6 +21,9 @@ private:
     std::vector<GATE*> Fanout;
     CircuitLibrary::GATEFUNC Func;
     bool IsInv;
+    unsigned level;
+    unsigned token;
+    bool scheduled;
     
     double arrivalTime;
     double requireTime;
@@ -28,17 +31,28 @@ private:
     double fallDelay;
     
 public:
-    GATE(std::string n):name(n),arrivalTime(0),requireTime(0),riseDelay(0),fallDelay(0){}
+    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseDelay(0),fallDelay(0){}
     
     void AddFanin(GATE* ptr){Fanin.push_back(ptr);ptr->Fanout.push_back(this);}
     GATE* GetFanin(unsigned idx){return Fanin[idx];}
+    GATE* GetFanout(unsigned idx){return Fanout[idx];}
     void SetFunc(CircuitLibrary::GATEFUNC func){Func=func;}
     void SetInv(bool inv){IsInv=inv;}
     void SetRiseDelay(double d){riseDelay=d;}
     void SetFallDelay(double d){fallDelay=d;}
+    void SetLevel(unsigned l){level=l;}
+    void IncToken(){token++;}
+    void ResetToken(){token=0;}
+    bool IsScheduled(){return scheduled;}
+    void SetScheduled(){scheduled=true;}
+    void ResetScheduled(){scheduled=false;}
     
     std::string GetName(){return name;}
+    CircuitLibrary::GATEFUNC GetGateFunc(){return Func;}
+    unsigned No_Fanin(){return (unsigned)Fanin.size();}
     unsigned No_Fanout(){return (unsigned)Fanout.size();}
+    unsigned GetLevel(){return level;}
+    unsigned GetToken(){return token;}
     std::string GetFunc(){
         switch (Func) {
             case CircuitLibrary::G_AND:

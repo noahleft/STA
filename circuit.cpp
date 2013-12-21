@@ -56,6 +56,13 @@ void CIRCUIT::LoadDesign(CircuitLibrary &design) {
 void CIRCUIT::CalculateGateDelay(DelayLibrary &delayLibrary) {
     for (unsigned i=0; i<No_Gate(); i++) {
         GATE* gate=netlist[i];
+        
+        if (gate->GetGateFunc()==CircuitLibrary::G_PI || gate->GetGateFunc()==CircuitLibrary::G_PO) {
+            gate->SetRiseDelay(0);
+            gate->SetFallDelay(0);
+            continue;
+        }
+        
         std::string gateFunc=gate->GetFunc();
         unsigned FanoutNum=gate->No_Fanout();
         double UnitFanoutDelay=delayLibrary.GetFanoutDelay(gateFunc);
@@ -66,5 +73,55 @@ void CIRCUIT::CalculateGateDelay(DelayLibrary &delayLibrary) {
     }
 }
 
-
+void CIRCUIT::Levelization() {
+    for (unsigned i=0; i<No_Gate(); i++) {
+        netlist[i]->ResetToken();
+        netlist[i]->SetLevel(0);
+        netlist[i]->ResetScheduled();
+    }
+    
+    for (unsigned i=0; i<No_PI(); i++) {
+        PIlist[i]->SetLevel(0);
+        for (unsigned j=0; j<PIlist[i]->No_Fanout(); j++) {
+            PIlist[i]->GetFanout(j)->IncToken();
+            if (!PIlist[i]->GetFanout(j)->IsScheduled()) {
+                queue.push(PIlist[i]->GetFanout(j));
+                PIlist[i]->GetFanout(j)->SetScheduled();
+            }
+        }
+    }
+    
+    while (!queue.empty()) {
+        GATE* gate=queue.front();
+        queue.pop();
+        
+        if (gate->GetToken()!=gate->No_Fanin()) {
+            queue.push(gate);
+            continue;
+        }
+        
+        unsigned tmp_level=0;
+        for (unsigned i=0; i<gate->No_Fanin(); i++) {
+            if (tmp_level<gate->GetFanin(i)->GetLevel()) {
+                tmp_level=gate->GetFanin(i)->GetLevel();
+            }
+        }
+        
+        gate->SetLevel(tmp_level+1);
+        for (unsigned i=0; i<gate->No_Fanout(); i++) {
+            gate->GetFanout(i)->IncToken();
+            if (!gate->GetFanout(i)->IsScheduled()) {
+                queue.push(gate->GetFanout(i));
+                gate->GetFanout(i)->SetScheduled();
+            }
+        }
+    }
+    
+    for (unsigned i=0; i<netlist.size(); i++) {
+        if (MaxLevel<netlist[i]->GetLevel()) {
+            MaxLevel=netlist[i]->GetLevel();
+        }
+    }
+    MaxLevel++;
+}
 
