@@ -17,7 +17,7 @@
 #include <fstream>
 
 class CircuitLibrary {
-private:
+public:
     enum GATEFUNC{G_PI,G_PO,G_AND,G_OR,G_BUF,G_XOR};
     struct GATE{
         std::string name;
@@ -27,6 +27,7 @@ private:
         std::vector<GATE*> FanoutList;
     };
     
+private:
     std::ifstream infile;
     std::map<std::string,GATE*> CircuitMap;
     std::vector<GATE*> netlist;
@@ -38,6 +39,9 @@ public:
     CircuitLibrary(){}
     ~CircuitLibrary();
     int InitialCircuit(std::string filename);
+    
+    int No_Gate(){return (int)netlist.size();}
+    GATE* Gate(unsigned idx){return netlist[idx];}
 };
 
 
