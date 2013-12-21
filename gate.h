@@ -27,19 +27,19 @@ private:
     
     double arrivalTime;
     double requireTime;
-    double riseDelay;
-    double fallDelay;
+    double riseGateDelay;
+    double fallGateDelay;
     
 public:
-    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseDelay(0),fallDelay(0){}
+    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseGateDelay(0),fallGateDelay(0){}
     
     void AddFanin(GATE* ptr){Fanin.push_back(ptr);ptr->Fanout.push_back(this);}
     GATE* GetFanin(unsigned idx){return Fanin[idx];}
     GATE* GetFanout(unsigned idx){return Fanout[idx];}
     void SetFunc(CircuitLibrary::GATEFUNC func){Func=func;}
     void SetInv(bool inv){IsInv=inv;}
-    void SetRiseDelay(double d){riseDelay=d;}
-    void SetFallDelay(double d){fallDelay=d;}
+    void SetRiseGateDelay(double d){riseGateDelay=d;}
+    void SetFallGateDelay(double d){fallGateDelay=d;}
     void SetLevel(unsigned l){level=l;}
     void IncToken(){token++;}
     void ResetToken(){token=0;}

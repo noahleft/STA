@@ -58,8 +58,8 @@ void CIRCUIT::CalculateGateDelay(DelayLibrary &delayLibrary) {
         GATE* gate=netlist[i];
         
         if (gate->GetGateFunc()==CircuitLibrary::G_PI || gate->GetGateFunc()==CircuitLibrary::G_PO) {
-            gate->SetRiseDelay(0);
-            gate->SetFallDelay(0);
+            gate->SetRiseGateDelay(0);
+            gate->SetFallGateDelay(0);
             continue;
         }
         
@@ -68,8 +68,8 @@ void CIRCUIT::CalculateGateDelay(DelayLibrary &delayLibrary) {
         double UnitFanoutDelay=delayLibrary.GetFanoutDelay(gateFunc);
         double RiseDelay=delayLibrary.GetRiseDelay(gateFunc);
         double FallDelay=delayLibrary.GetFallDelay(gateFunc);
-        gate->SetRiseDelay(RiseDelay+UnitFanoutDelay*FanoutNum);
-        gate->SetFallDelay(FallDelay+UnitFanoutDelay*FanoutNum);
+        gate->SetRiseGateDelay(RiseDelay+UnitFanoutDelay*FanoutNum);
+        gate->SetFallGateDelay(FallDelay+UnitFanoutDelay*FanoutNum);
     }
 }
 
