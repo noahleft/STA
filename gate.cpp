@@ -74,6 +74,13 @@ void GATE::CalculateArrivalTime() {
         }
     }
     
+    if (riseArrivalTime>fallArrivalTime) {
+        arrivalTime=riseArrivalTime;
+    }
+    else {
+        arrivalTime=fallArrivalTime;
+    }
+    
 }
 
 
