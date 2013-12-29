@@ -29,9 +29,11 @@ private:
     double requireTime;
     double riseGateDelay;
     double fallGateDelay;
+    double riseArrivalTime;
+    double fallArrivalTime;
     
 public:
-    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseGateDelay(0),fallGateDelay(0){}
+    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseGateDelay(0),fallGateDelay(0),riseArrivalTime(0),fallArrivalTime(0){}
     
     void AddFanin(GATE* ptr){Fanin.push_back(ptr);ptr->Fanout.push_back(this);}
     GATE* GetFanin(unsigned idx){return Fanin[idx];}
@@ -46,6 +48,9 @@ public:
     bool IsScheduled(){return scheduled;}
     void SetScheduled(){scheduled=true;}
     void ResetScheduled(){scheduled=false;}
+    void SetRiseArrivalTime(double d){riseArrivalTime=d;}
+    void SetFallArrivalTime(double d){fallArrivalTime=d;}
+    void CalculateArrivalTime();
     
     std::string GetName(){return name;}
     CircuitLibrary::GATEFUNC GetGateFunc(){return Func;}
@@ -53,35 +58,10 @@ public:
     unsigned No_Fanout(){return (unsigned)Fanout.size();}
     unsigned GetLevel(){return level;}
     unsigned GetToken(){return token;}
-    std::string GetFunc(){
-        switch (Func) {
-            case CircuitLibrary::G_AND:
-                if (IsInv) {return "NAND";}
-                else return "AND";
-                break;
-            case CircuitLibrary::G_OR:
-                if (IsInv) {return "NOR";}
-                else return "OR";
-                break;
-            case CircuitLibrary::G_BUF:
-                if (IsInv) {return "NOT";}
-                else return "BUFF";
-                break;
-            case CircuitLibrary::G_XOR:
-                if (IsInv) {return "XNOR";}
-                else return "XOR";
-                break;
-            case CircuitLibrary::G_PI:
-                return "INPUT";
-                break;
-            case CircuitLibrary::G_PO:
-                return "OUTPUT";
-                break;
-            default:
-                return "";
-                break;
-        }
-    }
+    double GetRiseArrivalTime(){return riseArrivalTime;}
+    double GetFallArrivalTime(){return fallArrivalTime;}
+    double GetArrivalTime(){return riseArrivalTime>fallArrivalTime?riseArrivalTime:fallArrivalTime;}
+    std::string GetFunc();
 };
 
 #endif /* defined(__StaticTimingAnalysis__gate__) */

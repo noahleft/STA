@@ -13,6 +13,7 @@
 #include "libraryParser.h"
 #include <iostream>
 #include <queue>
+#include <list>
 
 class CIRCUIT {
 private:
@@ -22,15 +23,20 @@ private:
     std::vector<GATE*> netlist;
     std::queue<GATE*> queue;
     unsigned MaxLevel;
+    std::list<GATE*>* GateList;
+    bool GateListAllocated;
+    
+    void AllocGateList(){GateList=new std::list<GATE*>[MaxLevel+1];GateListAllocated=true;}
     
 public:
     
-    CIRCUIT(){}
+    CIRCUIT():MaxLevel(0),GateListAllocated(false){}
     ~CIRCUIT();
     
     void LoadDesign(CircuitLibrary &);
     void CalculateGateDelay(DelayLibrary &);
     void Levelization();
+    void CalculateArrivalTime();
     
     unsigned No_PI(){return (unsigned)PIlist.size();}
     unsigned No_PO(){return (unsigned)POlist.size();}

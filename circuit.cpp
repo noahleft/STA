@@ -12,6 +12,9 @@ CIRCUIT::~CIRCUIT() {
     for (unsigned i=0; i<netlist.size(); i++) {
         delete netlist[i];
     }
+    if (GateListAllocated) {
+        delete [] GateList;
+    }
 }
 
 void CIRCUIT::LoadDesign(CircuitLibrary &design) {
@@ -123,6 +126,24 @@ void CIRCUIT::Levelization() {
         }
         netlist[i]->ResetScheduled();
     }
-    MaxLevel++;
 }
+
+void CIRCUIT::CalculateArrivalTime() {
+    AllocGateList();
+    
+    for (unsigned i=0; i<No_Gate(); i++) {
+        GATE* gate=netlist[i];
+        GateList[gate->GetLevel()].push_back(gate);
+    }
+    
+    for (unsigned i=0; i<=MaxLevel; i++) {
+        while (!GateList[i].empty()) {
+            GATE* gate=GateList[i].front();
+            GateList[i].pop_front();
+            
+            gate->CalculateArrivalTime();
+        }
+    }
+}
+
 

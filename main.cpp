@@ -38,6 +38,8 @@ int main(int argc, const char * argv[])
     circuit.LoadDesign(designLibrary);
     circuit.CalculateGateDelay(library);
     circuit.Levelization();
+    circuit.CalculateArrivalTime();
+    
     
     Fileout();
     return 0;
@@ -47,8 +49,8 @@ void Fileout() {
     cout<<circuit.No_PI()<<" "<<circuit.No_PO()<<" "<<circuit.No_Gate()-circuit.No_PI()-circuit.No_PO()<<endl;
     
     for (unsigned i=0; i<circuit.No_PO(); i++) {
-        GATE* gate=circuit.PO_Gate(i)->GetFanin(0);
-        cout<<gate->GetName();
+        GATE* gate=circuit.PO_Gate(i);
+        cout<<gate->GetFanin(0)->GetName()<<" "<<gate->GetRiseArrivalTime()<<" "<<gate->GetFallArrivalTime();
         cout<<endl;
     }
 }
