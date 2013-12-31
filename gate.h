@@ -30,10 +30,12 @@ private:
     double riseGateDelay;
     double fallGateDelay;
     double riseArrivalTime;
+    GATE* riseArrivalFrom;
     double fallArrivalTime;
+    GATE* fallArrivalFrom;
     
 public:
-    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseGateDelay(0),fallGateDelay(0),riseArrivalTime(0),fallArrivalTime(0){}
+    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseGateDelay(0),fallGateDelay(0),riseArrivalTime(0),riseArrivalFrom(NULL),fallArrivalTime(0),fallArrivalFrom(NULL){}
     
     void AddFanin(GATE* ptr){Fanin.push_back(ptr);ptr->Fanout.push_back(this);}
     GATE* GetFanin(unsigned idx){return Fanin[idx];}

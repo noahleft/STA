@@ -53,9 +53,11 @@ void GATE::CalculateArrivalTime() {
             
             if (riseArrivalTime < (tmp->riseArrivalTime + riseGateDelay)) {
                 riseArrivalTime = (tmp->riseArrivalTime + riseGateDelay);
+                riseArrivalFrom = tmp;
             }
             if (fallArrivalTime < (tmp->fallArrivalTime + fallGateDelay)) {
                 fallArrivalTime = (tmp->fallArrivalTime + fallGateDelay);
+                fallArrivalFrom = tmp;
             }
         }
     }
@@ -67,9 +69,11 @@ void GATE::CalculateArrivalTime() {
             
             if (riseArrivalTime < (tmp->fallArrivalTime + riseGateDelay)) {
                 riseArrivalTime = (tmp->fallArrivalTime + riseGateDelay);
+                riseArrivalFrom = tmp;
             }
             if (fallArrivalTime < (tmp->riseArrivalTime + fallGateDelay)) {
                 fallArrivalTime = (tmp->riseArrivalTime + fallGateDelay);
+                fallArrivalFrom = tmp;
             }
         }
     }
