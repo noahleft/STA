@@ -144,6 +144,23 @@ void CIRCUIT::CalculateArrivalTime() {
             gate->CalculateArrivalTime();
         }
     }
+    
+    
+    MaxArrivalTimeGATE=POlist[0];
+    for (unsigned i=1; i<POlist.size(); i++) {
+        if (MaxArrivalTimeGATE->GetArrivalTime()<POlist[i]->GetArrivalTime()) {
+            MaxArrivalTimeGATE=POlist[i];
+        }
+    }
+    ClockPeriod=MaxArrivalTimeGATE->GetArrivalTime();
+    
+    for (unsigned i=0; i<POlist.size(); i++) {
+        POlist[i]->CalculateRequireTime(ClockPeriod);
+    }
+}
+
+std::string CIRCUIT::GetLongestPath() {
+    return MaxArrivalTimeGATE->GetFanin(0)->GetLongestPath();
 }
 
 

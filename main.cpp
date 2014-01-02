@@ -50,7 +50,12 @@ void Fileout() {
     
     for (unsigned i=0; i<circuit.No_PO(); i++) {
         GATE* gate=circuit.PO_Gate(i);
-        cout<<gate->GetFanin(0)->GetName()<<" "<<gate->GetArrivalTime();
+        cout<<gate->GetFanin(0)->GetName()<<" "<<gate->GetArrivalTime()<<" "<<gate->GetRequireTime();
         cout<<endl;
     }
+    
+    
+    string str;
+    str=circuit.GetLongestPath();
+    cout<<str<<endl;
 }

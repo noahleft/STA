@@ -87,5 +87,35 @@ void GATE::CalculateArrivalTime() {
     
 }
 
+std::string GATE::GetLongestPath() {
+    
+    std::string path;
+    bool IsRiseSignal;
+    
+    if (riseArrivalTime > fallArrivalTime) {
+        IsRiseSignal=true;
+    }
+    else {
+        IsRiseSignal=false;
+    }
+    
+    GATE* ptr=this;
+    while (ptr!=NULL) {
+        path+=ptr->GetName();
+        path+=" ";
+        
+        if (IsRiseSignal) {
+            ptr=ptr->riseArrivalFrom;
+        }
+        else {
+            ptr=ptr->fallArrivalFrom;
+        }
+        
+    }
+    
+    return path;
+}
 
-
+void GATE::CalculateRequireTime(double t) {
+    requireTime=t;
+}

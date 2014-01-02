@@ -25,12 +25,15 @@ private:
     unsigned MaxLevel;
     std::list<GATE*>* GateList;
     bool GateListAllocated;
+    GATE* MaxArrivalTimeGATE;
+    
+    double ClockPeriod;
     
     void AllocGateList(){GateList=new std::list<GATE*>[MaxLevel+1];GateListAllocated=true;}
     
 public:
     
-    CIRCUIT():MaxLevel(0),GateListAllocated(false){}
+    CIRCUIT():MaxLevel(0),GateListAllocated(false),MaxArrivalTimeGATE(NULL),ClockPeriod(0){}
     ~CIRCUIT();
     
     void LoadDesign(CircuitLibrary &);
@@ -43,6 +46,7 @@ public:
     unsigned No_Gate(){return (unsigned)netlist.size();}
     
     GATE* PO_Gate(unsigned idx){return POlist[idx];}
+    std::string GetLongestPath();
 };
 
 #endif /* defined(__StaticTimingAnalysis__circuit__) */

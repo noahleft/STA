@@ -53,6 +53,7 @@ public:
     void SetRiseArrivalTime(double d){riseArrivalTime=d;}
     void SetFallArrivalTime(double d){fallArrivalTime=d;}
     void CalculateArrivalTime();
+    void CalculateRequireTime(double t);
     
     std::string GetName(){return name;}
     CircuitLibrary::GATEFUNC GetGateFunc(){return Func;}
@@ -63,7 +64,9 @@ public:
     double GetRiseArrivalTime(){return riseArrivalTime;}
     double GetFallArrivalTime(){return fallArrivalTime;}
     double GetArrivalTime(){return riseArrivalTime>fallArrivalTime?riseArrivalTime:fallArrivalTime;}
+    double GetRequireTime(){return requireTime;}
     std::string GetFunc();
+    std::string GetLongestPath();
 };
 
 #endif /* defined(__StaticTimingAnalysis__gate__) */
