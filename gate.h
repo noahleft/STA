@@ -65,6 +65,7 @@ public:
     double GetFallArrivalTime(){return fallArrivalTime;}
     double GetArrivalTime(){return riseArrivalTime>fallArrivalTime?riseArrivalTime:fallArrivalTime;}
     double GetRequireTime(){return requireTime;}
+    double GetSlack(){return requireTime-arrivalTime;}
     std::string GetFunc();
     std::string GetLongestPath();
 };
