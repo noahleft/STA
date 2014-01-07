@@ -160,7 +160,7 @@ void CIRCUIT::CalculateArrivalTime() {
 }
 
 std::string CIRCUIT::GetLongestPath() {
-    return MaxArrivalTimeGATE->GetFanin(0)->GetLongestPath();
+    return MaxArrivalTimeGATE->GetLongestPath();
 }
 
 

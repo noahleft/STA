@@ -91,28 +91,51 @@ std::string GATE::GetLongestPath() {
     
     std::string path;
     bool IsRiseSignal;
+    GATE* ptr=this;
     
     if (riseArrivalTime > fallArrivalTime) {
         IsRiseSignal=true;
+        path="R";
+        ptr=ptr->riseArrivalFrom;
     }
     else {
         IsRiseSignal=false;
+        path="F";
+        ptr=ptr->fallArrivalFrom;
     }
     
-    GATE* ptr=this;
-    while (ptr!=NULL) {
-        path+=ptr->GetName();
-        path+=" ";
+    while (ptr->No_Fanin()!=0) {
         
         if (IsRiseSignal) {
+            path=ptr->GetName()+" "+path;
+            if (ptr->IsInv) {
+                IsRiseSignal=!IsRiseSignal;
+            }
+            if (IsRiseSignal) {
+                path="R "+path;
+            }
+            else {
+                path="F "+path;
+            }
             ptr=ptr->riseArrivalFrom;
         }
         else {
+            path=ptr->GetName()+" "+path;
+            if (ptr->IsInv) {
+                IsRiseSignal=!IsRiseSignal;
+            }
+            if (IsRiseSignal) {
+                path="R "+path;
+            }
+            else {
+                path="F "+path;
+            }
             ptr=ptr->fallArrivalFrom;
         }
         
+        
     }
-    
+    path=ptr->GetName()+" "+path;
     return path;
 }
 
