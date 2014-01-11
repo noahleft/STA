@@ -55,9 +55,9 @@ void Fileout(string& OutfileName) {
         outfile<<endl;
     }
     
-    string str;
+    vector<string> str;
     str=circuit.GetLongestPath();
-    outfile<<str<<endl;
+    outfile<<str[0]<<endl;
     
     outfile.close();
 }

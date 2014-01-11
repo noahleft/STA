@@ -67,7 +67,7 @@ public:
     double GetRequireTime(){return requireTime;}
     double GetSlack(){return requireTime-arrivalTime;}
     std::string GetFunc();
-    std::string GetLongestPath();
+    std::vector<std::string> GetLongestPath();
 };
 
 #endif /* defined(__StaticTimingAnalysis__gate__) */

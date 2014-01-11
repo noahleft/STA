@@ -159,7 +159,7 @@ void CIRCUIT::CalculateArrivalTime() {
     }
 }
 
-std::string CIRCUIT::GetLongestPath() {
+std::vector<std::string> CIRCUIT::GetLongestPath() {
     return MaxArrivalTimeGATE->GetLongestPath();
 }
 

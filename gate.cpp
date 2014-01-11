@@ -110,7 +110,7 @@ void GATE::CalculateArrivalTime() {
     
 }
 
-std::string GATE::GetLongestPath() {
+std::vector<std::string> GATE::GetLongestPath() {
     
     std::string path;
     bool IsRiseSignal;
@@ -182,7 +182,9 @@ std::string GATE::GetLongestPath() {
         
     }
     path=ptr->GetName()+" "+path;
-    return path;
+    std::vector<std::string> pathList;
+    pathList.push_back(path);
+    return pathList;
 }
 
 void GATE::CalculateRequireTime(double t) {

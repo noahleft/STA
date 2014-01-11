@@ -46,7 +46,7 @@ public:
     unsigned No_Gate(){return (unsigned)netlist.size();}
     
     GATE* PO_Gate(unsigned idx){return POlist[idx];}
-    std::string GetLongestPath();
+    std::vector<std::string> GetLongestPath();
 };
 
 #endif /* defined(__StaticTimingAnalysis__circuit__) */
