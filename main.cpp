@@ -15,7 +15,7 @@ using namespace std;
 DelayLibrary library;
 CircuitLibrary designLibrary;
 CIRCUIT circuit;
-void Fileout();
+void Fileout(string&);
 
 int main(int argc, const char * argv[])
 {
@@ -41,20 +41,23 @@ int main(int argc, const char * argv[])
     circuit.CalculateArrivalTime();
     
     
-    Fileout();
+    Fileout(OutfileName);
     return 0;
 }
 
-void Fileout() {
-    cout<<circuit.No_PI()<<" "<<circuit.No_PO()<<" "<<circuit.No_Gate()-circuit.No_PI()-circuit.No_PO()<<endl;
+void Fileout(string& OutfileName) {
+    fstream outfile(OutfileName.c_str(),ios::out);
+    outfile<<circuit.No_PI()<<" "<<circuit.No_PO()<<" "<<circuit.No_Gate()-circuit.No_PI()-circuit.No_PO()<<endl;
     
     for (unsigned i=0; i<circuit.No_PO(); i++) {
         GATE* gate=circuit.PO_Gate(i);
-        cout<<gate->GetFanin(0)->GetName()<<" "<<gate->GetArrivalTime()<<" "<<gate->GetSlack();
-        cout<<endl;
+        outfile<<gate->GetFanin(0)->GetName()<<" "<<gate->GetArrivalTime()<<" "<<gate->GetSlack();
+        outfile<<endl;
     }
     
     string str;
     str=circuit.GetLongestPath();
-    cout<<str<<endl;
+    outfile<<str<<endl;
+    
+    outfile.close();
 }
