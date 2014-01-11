@@ -45,13 +45,16 @@ void CircuitLibrary::AllocGate(std::string Name, std::string Func, std::string F
         else if (Func.compare("NAND")==0) {gate->Func=G_AND; gate->IsInv=true;}
         else if (Func.compare("OR")==0) {gate->Func=G_OR; gate->IsInv=false;}
         else if (Func.compare("NOR")==0) {gate->Func=G_OR; gate->IsInv=true;}
-        else if (Func.compare("BUF")==0) {gate->Func=G_BUF; gate->IsInv=false;}
+        else if (Func.compare("BUFF")==0) {gate->Func=G_BUF; gate->IsInv=false;}
         else if (Func.compare("INV")==0) {gate->Func=G_BUF; gate->IsInv=true;}
         else if (Func.compare("NOT")==0) {gate->Func=G_BUF; gate->IsInv=true;}
         else if (Func.compare("XOR")==0) {gate->Func=G_XOR; gate->IsInv=false;}
         else if (Func.compare("XNOR")==0) {gate->Func=G_XOR; gate->IsInv=true;}
         else if (Func.compare("PI")==0) {gate->Func=G_PI; gate->IsInv=false;}
         else if (Func.compare("PO")==0) {gate->Func=G_PO; gate->IsInv=false;}
+        else {
+            std::cout<<Func<<" unknown logic type"<<std::endl;
+        }
         
     }
     
@@ -82,11 +85,19 @@ void CircuitLibrary::AllocGate(std::string Name, std::string Func, std::string F
 }
 
 void EraseSpaceAndTab(std::string &str) {
+    if (str[0]=='#') {
+        str="";
+        return;
+    }
     for (int i=0; i<str.size(); i++) {
-        if (str[i]==' ' || str[i]=='\t') {
-            str.erase(i,1);
-            i--;
+        if (isalpha(str[i]) || isnumber(str[i])) {
+            continue;
         }
+        if (str[i]=='=' || str[i]=='(' || str[i]==')' || str[i]==',') {
+            continue;
+        }
+        str.erase(i,1);
+        i--;
     }
 }
 
@@ -97,6 +108,8 @@ void CircuitLibrary::Parser() {
         getline(infile,str);
         EraseSpaceAndTab(str);
         if (str.length()==0) {continue;}
+        if (str[0]=='#') {continue;}
+        
         
         if (str.substr(0,5).compare("INPUT")==0) {
             str=str.substr(6);
