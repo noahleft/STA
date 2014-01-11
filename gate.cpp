@@ -110,6 +110,39 @@ void GATE::CalculateArrivalTime() {
     
 }
 
+void TracebackLongestPath(std::vector<std::string>& pathList,std::string path,GATE* ptr,bool IsRiseSignal) {
+    path=ptr->GetName()+" "+path;
+    if (ptr->No_Fanin()==0) {
+        //reach PI
+        pathList.push_back(path);
+        return;
+    }
+    if (ptr->GetGateFunc()==CircuitLibrary::G_XOR) {
+        GATE* gate_ptr;
+        if (IsRiseSignal) {
+            gate_ptr=ptr->GetRiseArrivalFrom();
+        }
+        else gate_ptr=ptr->GetFallArrivalFrom();
+        if (gate_ptr->GetRiseArrivalTime() > gate_ptr->GetFallArrivalTime()) {
+            IsRiseSignal=true;
+        }
+        else IsRiseSignal=false;
+    }
+    else if (ptr->IsInversion()) {
+        IsRiseSignal=!IsRiseSignal;
+    }
+    
+    if (IsRiseSignal) {
+        path="R "+path;
+        ptr=ptr->GetRiseArrivalFrom();
+    }
+    else {
+        path="F "+path;
+        ptr=ptr->GetFallArrivalFrom();
+    }
+    TracebackLongestPath(pathList, path, ptr, IsRiseSignal);
+}
+
 std::vector<std::string> GATE::GetLongestPath() {
     
     std::string path;
@@ -127,64 +160,8 @@ std::vector<std::string> GATE::GetLongestPath() {
         ptr=ptr->fallArrivalFrom;
     }
     //trace back
-    while (ptr->No_Fanin()!=0) {
-        
-        if (IsRiseSignal) {
-            path=ptr->GetName()+" "+path;
-            
-            if (ptr->GetGateFunc()==CircuitLibrary::G_XOR) {
-                if (ptr->riseArrivalFrom->GetRiseArrivalTime() > ptr->riseArrivalFrom->GetFallArrivalTime()) {
-                    IsRiseSignal=true;
-                }
-                else {
-                    IsRiseSignal=false;
-                }
-            }
-            else if (ptr->IsInv) {
-                IsRiseSignal=!IsRiseSignal;
-            }
-            
-            
-            if (IsRiseSignal) {
-                path="R "+path;
-            }
-            else {
-                path="F "+path;
-            }
-            ptr=ptr->riseArrivalFrom;
-        }
-        else {
-            path=ptr->GetName()+" "+path;
-            
-            
-            if (ptr->GetGateFunc()==CircuitLibrary::G_XOR) {
-                if (ptr->fallArrivalFrom->GetRiseArrivalTime() > ptr->fallArrivalFrom->GetFallArrivalTime()) {
-                    IsRiseSignal=true;
-                }
-                else {
-                    IsRiseSignal=false;
-                }
-            }
-            else if (ptr->IsInv) {
-                IsRiseSignal=!IsRiseSignal;
-            }
-            
-            
-            if (IsRiseSignal) {
-                path="R "+path;
-            }
-            else {
-                path="F "+path;
-            }
-            ptr=ptr->fallArrivalFrom;
-        }
-        
-        
-    }
-    path=ptr->GetName()+" "+path;
-    
     std::vector<std::string> pathList;
-    pathList.push_back(path);
+    TracebackLongestPath(pathList, path, ptr, IsRiseSignal);
     return pathList;
 }
 
