@@ -45,7 +45,30 @@ void GATE::CalculateArrivalTime() {
     riseArrivalTime=0;
     fallArrivalTime=0;
     
-    if (!IsInv) {
+    if (Func==CircuitLibrary::G_XOR) {
+        //all logic fanin will possibly trigger
+        for (unsigned i=0; i<Fanin.size(); i++) {
+            GATE* tmp=Fanin[i];
+            
+            if (riseArrivalTime < (tmp->riseArrivalTime + riseGateDelay)) {
+                riseArrivalTime = (tmp->riseArrivalTime + riseGateDelay);
+                riseArrivalFrom = tmp;
+            }
+            if (fallArrivalTime < (tmp->fallArrivalTime + fallGateDelay)) {
+                fallArrivalTime = (tmp->fallArrivalTime + fallGateDelay);
+                fallArrivalFrom = tmp;
+            }
+            if (riseArrivalTime < (tmp->fallArrivalTime + riseGateDelay)) {
+                riseArrivalTime = (tmp->fallArrivalTime + riseGateDelay);
+                riseArrivalFrom = tmp;
+            }
+            if (fallArrivalTime < (tmp->riseArrivalTime + fallGateDelay)) {
+                fallArrivalTime = (tmp->riseArrivalTime + fallGateDelay);
+                fallArrivalFrom = tmp;
+            }
+        }
+    }
+    else if (!IsInv) {
         //positive-logic need same input logic
         //Rise-signal come will generate rising signal
         for (unsigned i=0; i<Fanin.size(); i++) {
@@ -108,9 +131,20 @@ std::string GATE::GetLongestPath() {
         
         if (IsRiseSignal) {
             path=ptr->GetName()+" "+path;
-            if (ptr->IsInv) {
+            
+            if (ptr->GetGateFunc()==CircuitLibrary::G_XOR) {
+                if (ptr->riseArrivalFrom->GetRiseArrivalTime() > ptr->riseArrivalFrom->GetFallArrivalTime()) {
+                    IsRiseSignal=true;
+                }
+                else {
+                    IsRiseSignal=false;
+                }
+            }
+            else if (ptr->IsInv) {
                 IsRiseSignal=!IsRiseSignal;
             }
+            
+            
             if (IsRiseSignal) {
                 path="R "+path;
             }
@@ -121,9 +155,21 @@ std::string GATE::GetLongestPath() {
         }
         else {
             path=ptr->GetName()+" "+path;
-            if (ptr->IsInv) {
+            
+            
+            if (ptr->GetGateFunc()==CircuitLibrary::G_XOR) {
+                if (ptr->fallArrivalFrom->GetRiseArrivalTime() > ptr->fallArrivalFrom->GetFallArrivalTime()) {
+                    IsRiseSignal=true;
+                }
+                else {
+                    IsRiseSignal=false;
+                }
+            }
+            else if (ptr->IsInv) {
                 IsRiseSignal=!IsRiseSignal;
             }
+            
+            
             if (IsRiseSignal) {
                 path="R "+path;
             }
