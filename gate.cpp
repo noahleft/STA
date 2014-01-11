@@ -115,7 +115,7 @@ std::vector<std::string> GATE::GetLongestPath() {
     std::string path;
     bool IsRiseSignal;
     GATE* ptr=this;
-    
+    // decide trace back from which output
     if (riseArrivalTime > fallArrivalTime) {
         IsRiseSignal=true;
         path="R";
@@ -126,7 +126,7 @@ std::vector<std::string> GATE::GetLongestPath() {
         path="F";
         ptr=ptr->fallArrivalFrom;
     }
-    
+    //trace back
     while (ptr->No_Fanin()!=0) {
         
         if (IsRiseSignal) {
@@ -182,6 +182,7 @@ std::vector<std::string> GATE::GetLongestPath() {
         
     }
     path=ptr->GetName()+" "+path;
+    
     std::vector<std::string> pathList;
     pathList.push_back(path);
     return pathList;
