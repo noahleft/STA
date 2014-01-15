@@ -25,7 +25,7 @@ private:
     unsigned MaxLevel;
     std::list<GATE*>* GateList;
     bool GateListAllocated;
-    GATE* MaxArrivalTimeGATE;
+    std::vector<GATE*> MaxArrivalTimeGATE;
     
     double ClockPeriod;
     
@@ -33,7 +33,7 @@ private:
     
 public:
     
-    CIRCUIT():MaxLevel(0),GateListAllocated(false),MaxArrivalTimeGATE(NULL),ClockPeriod(0){}
+    CIRCUIT():MaxLevel(0),GateListAllocated(false),ClockPeriod(0){}
     ~CIRCUIT();
     
     void LoadDesign(CircuitLibrary &);

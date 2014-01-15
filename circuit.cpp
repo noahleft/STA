@@ -146,13 +146,17 @@ void CIRCUIT::CalculateArrivalTime() {
     }
     
     
-    MaxArrivalTimeGATE=POlist[0];
+    MaxArrivalTimeGATE.push_back(POlist[0]);
     for (unsigned i=1; i<POlist.size(); i++) {
-        if (MaxArrivalTimeGATE->GetArrivalTime()<POlist[i]->GetArrivalTime()) {
-            MaxArrivalTimeGATE=POlist[i];
+        if (MaxArrivalTimeGATE[0]->GetArrivalTime()<POlist[i]->GetArrivalTime()) {
+            MaxArrivalTimeGATE.clear();
+            MaxArrivalTimeGATE.push_back(POlist[i]);
+        }
+        else if (MaxArrivalTimeGATE[0]->GetArrivalTime() == POlist[i]->GetArrivalTime()) {
+            MaxArrivalTimeGATE.push_back(POlist[i]);
         }
     }
-    ClockPeriod=MaxArrivalTimeGATE->GetArrivalTime();
+    ClockPeriod=MaxArrivalTimeGATE[0]->GetArrivalTime();
     
     for (unsigned i=0; i<POlist.size(); i++) {
         POlist[i]->CalculateRequireTime(ClockPeriod);
@@ -160,7 +164,18 @@ void CIRCUIT::CalculateArrivalTime() {
 }
 
 std::vector<std::string> CIRCUIT::GetLongestPath() {
-    return MaxArrivalTimeGATE->GetLongestPath();
+    std::vector<std::string> pathList;
+    std::vector<std::string> tmpList;
+    for (unsigned i=0; i<MaxArrivalTimeGATE.size(); i++) {
+        tmpList=MaxArrivalTimeGATE[i]->GetLongestPath();
+        for (unsigned j=0; j<tmpList.size(); j++) {
+            pathList.push_back(tmpList[j]);
+        }
+        if (pathList.size()>=5) {
+            return pathList;
+        }
+    }
+    return pathList;
 }
 
 
