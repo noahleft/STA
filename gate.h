@@ -30,12 +30,12 @@ private:
     double riseGateDelay;
     double fallGateDelay;
     double riseArrivalTime;
-    GATE* riseArrivalFrom;
+    std::vector<GATE*> riseArrivalFrom;
     double fallArrivalTime;
-    GATE* fallArrivalFrom;
+    std::vector<GATE*> fallArrivalFrom;
     
 public:
-    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseGateDelay(0),fallGateDelay(0),riseArrivalTime(0),riseArrivalFrom(NULL),fallArrivalTime(0),fallArrivalFrom(NULL){}
+    GATE(std::string n):name(n),level(0),token(0),scheduled(false),arrivalTime(0),requireTime(0),riseGateDelay(0),fallGateDelay(0),riseArrivalTime(0),fallArrivalTime(0){}
     
     void AddFanin(GATE* ptr){Fanin.push_back(ptr);ptr->Fanout.push_back(this);}
     GATE* GetFanin(unsigned idx){return Fanin[idx];}
@@ -69,8 +69,8 @@ public:
     std::string GetFunc();
     std::vector<std::string> GetLongestPath();
     bool IsInversion(){return IsInv;}
-    GATE* GetRiseArrivalFrom(){return riseArrivalFrom;}
-    GATE* GetFallArrivalFrom(){return fallArrivalFrom;}
+    std::vector<GATE*> GetRiseArrivalFrom(){return riseArrivalFrom;}
+    std::vector<GATE*> GetFallArrivalFrom(){return fallArrivalFrom;}
 };
 
 #endif /* defined(__StaticTimingAnalysis__gate__) */

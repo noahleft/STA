@@ -20,14 +20,19 @@ void Fileout(string&);
 int main(int argc, const char * argv[])
 {
     string DelayLibrary="nctu_18.tech";
+    string CircuitFile="c7552.bench";
+    string OutfileName="c7552.dat";
+    if (argc==4) {
+        DelayLibrary=argv[1];
+        CircuitFile=argv[2];
+        OutfileName=argv[3];
+    }
     
     int Status_DelayLibrary=library.InitialLibrary(DelayLibrary);
     if (Status_DelayLibrary==0) {
         cout<<"You shall check library file name or path please."<<endl;
         return -1;
     }
-    
-    string CircuitFile="c17.bench";
     
     int Status_Circuit=designLibrary.InitialCircuit(CircuitFile);
     if (Status_Circuit==0) {
@@ -57,7 +62,9 @@ void Fileout(string& OutfileName) {
     
     vector<string> str;
     str=circuit.GetLongestPath();
-    outfile<<str[0]<<endl;
+    for (unsigned i=0; i<str.size(); i++) {
+        outfile<<str[i]<<endl;
+    }
     
     outfile.close();
 }

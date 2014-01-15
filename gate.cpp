@@ -52,19 +52,38 @@ void GATE::CalculateArrivalTime() {
             
             if (riseArrivalTime < (tmp->riseArrivalTime + riseGateDelay)) {
                 riseArrivalTime = (tmp->riseArrivalTime + riseGateDelay);
-                riseArrivalFrom = tmp;
+                riseArrivalFrom.clear();
+                riseArrivalFrom.push_back(tmp);
             }
+            else if (riseArrivalTime == (tmp->riseArrivalTime + riseGateDelay)) {
+                riseArrivalFrom.push_back(tmp);
+            }
+            
             if (fallArrivalTime < (tmp->fallArrivalTime + fallGateDelay)) {
                 fallArrivalTime = (tmp->fallArrivalTime + fallGateDelay);
-                fallArrivalFrom = tmp;
+                fallArrivalFrom.clear();
+                fallArrivalFrom.push_back(tmp);
             }
+            else if (fallArrivalTime == (tmp->fallArrivalTime + fallGateDelay)) {
+                fallArrivalFrom.push_back(tmp);
+            }
+            
             if (riseArrivalTime < (tmp->fallArrivalTime + riseGateDelay)) {
                 riseArrivalTime = (tmp->fallArrivalTime + riseGateDelay);
-                riseArrivalFrom = tmp;
+                riseArrivalFrom.clear();
+                riseArrivalFrom.push_back(tmp);
             }
+            else if (riseArrivalTime == (tmp->fallArrivalTime + riseGateDelay)) {
+                riseArrivalFrom.push_back(tmp);
+            }
+            
             if (fallArrivalTime < (tmp->riseArrivalTime + fallGateDelay)) {
                 fallArrivalTime = (tmp->riseArrivalTime + fallGateDelay);
-                fallArrivalFrom = tmp;
+                fallArrivalFrom.clear();
+                fallArrivalFrom.push_back(tmp);
+            }
+            else if (fallArrivalTime == (tmp->riseArrivalTime + fallGateDelay)) {
+                fallArrivalFrom.push_back(tmp);
             }
         }
     }
@@ -76,11 +95,20 @@ void GATE::CalculateArrivalTime() {
             
             if (riseArrivalTime < (tmp->riseArrivalTime + riseGateDelay)) {
                 riseArrivalTime = (tmp->riseArrivalTime + riseGateDelay);
-                riseArrivalFrom = tmp;
+                riseArrivalFrom.clear();
+                riseArrivalFrom.push_back(tmp);
             }
+            else if (riseArrivalTime == (tmp->riseArrivalTime + riseGateDelay)) {
+                riseArrivalFrom.push_back(tmp);
+            }
+            
             if (fallArrivalTime < (tmp->fallArrivalTime + fallGateDelay)) {
                 fallArrivalTime = (tmp->fallArrivalTime + fallGateDelay);
-                fallArrivalFrom = tmp;
+                fallArrivalFrom.clear();
+                fallArrivalFrom.push_back(tmp);
+            }
+            else if (fallArrivalTime == (tmp->fallArrivalTime + fallGateDelay)) {
+                fallArrivalFrom.push_back(tmp);
             }
         }
     }
@@ -92,11 +120,20 @@ void GATE::CalculateArrivalTime() {
             
             if (riseArrivalTime < (tmp->fallArrivalTime + riseGateDelay)) {
                 riseArrivalTime = (tmp->fallArrivalTime + riseGateDelay);
-                riseArrivalFrom = tmp;
+                riseArrivalFrom.clear();
+                riseArrivalFrom.push_back(tmp);
             }
+            else if (riseArrivalTime == (tmp->fallArrivalTime + riseGateDelay)) {
+                riseArrivalFrom.push_back(tmp);
+            }
+            
             if (fallArrivalTime < (tmp->riseArrivalTime + fallGateDelay)) {
                 fallArrivalTime = (tmp->riseArrivalTime + fallGateDelay);
-                fallArrivalFrom = tmp;
+                fallArrivalFrom.clear();
+                fallArrivalFrom.push_back(tmp);
+            }
+            else if (fallArrivalTime == (tmp->riseArrivalTime + fallGateDelay)) {
+                fallArrivalFrom.push_back(tmp);
             }
         }
     }
@@ -112,35 +149,64 @@ void GATE::CalculateArrivalTime() {
 
 void TracebackLongestPath(std::vector<std::string>& pathList,std::string path,GATE* ptr,bool IsRiseSignal) {
     path=ptr->GetName()+" "+path;
+    if (pathList.size()>5) {
+        return;
+    }
     if (ptr->No_Fanin()==0) {
         //reach PI
         pathList.push_back(path);
         return;
     }
     if (ptr->GetGateFunc()==CircuitLibrary::G_XOR) {
-        GATE* gate_ptr;
+        
+        std::vector<GATE*> gateList;
+        std::string R_path,F_path;
+        R_path="R "+path;
+        F_path="F "+path;
         if (IsRiseSignal) {
-            gate_ptr=ptr->GetRiseArrivalFrom();
+            gateList=ptr->GetRiseArrivalFrom();
         }
-        else gate_ptr=ptr->GetFallArrivalFrom();
-        if (gate_ptr->GetRiseArrivalTime() > gate_ptr->GetFallArrivalTime()) {
-            IsRiseSignal=true;
+        else {
+            gateList=ptr->GetFallArrivalFrom();
         }
-        else IsRiseSignal=false;
-    }
-    else if (ptr->IsInversion()) {
-        IsRiseSignal=!IsRiseSignal;
-    }
-    
-    if (IsRiseSignal) {
-        path="R "+path;
-        ptr=ptr->GetRiseArrivalFrom();
+        for (unsigned i=0; i<gateList.size(); i++) {
+            ptr=gateList[i];
+            if (ptr->GetRiseArrivalTime() > ptr->GetFallArrivalTime()) {
+                TracebackLongestPath(pathList, R_path, ptr, true);
+            }
+            else if (ptr->GetRiseArrivalTime() == ptr->GetFallArrivalTime()) {
+                TracebackLongestPath(pathList, R_path, ptr, true);
+                TracebackLongestPath(pathList, F_path, ptr, false);
+            }
+            else {
+                TracebackLongestPath(pathList, F_path, ptr, false);
+            }
+        }
     }
     else {
-        path="F "+path;
-        ptr=ptr->GetFallArrivalFrom();
+        std::vector<GATE*> gateList;
+        if (IsRiseSignal) {
+            gateList=ptr->GetRiseArrivalFrom();
+        }
+        else {
+            gateList=ptr->GetFallArrivalFrom();
+        }
+        
+        if (ptr->IsInversion()) {
+            IsRiseSignal=!IsRiseSignal;
+        }
+        
+        if (IsRiseSignal) {
+            path="R "+path;
+        }
+        else {
+            path="F "+path;
+        }
+        for (unsigned i=0; i<gateList.size(); i++) {
+            ptr=gateList[i];
+            TracebackLongestPath(pathList, path, ptr, IsRiseSignal);
+        }
     }
-    TracebackLongestPath(pathList, path, ptr, IsRiseSignal);
 }
 
 std::vector<std::string> GATE::GetLongestPath() {
@@ -152,12 +218,14 @@ std::vector<std::string> GATE::GetLongestPath() {
     if (riseArrivalTime > fallArrivalTime) {
         IsRiseSignal=true;
         path="R";
-        ptr=ptr->riseArrivalFrom;
+        std::vector<GATE*> gateList=ptr->GetRiseArrivalFrom();
+        ptr=gateList[0];
     }
     else {
         IsRiseSignal=false;
         path="F";
-        ptr=ptr->fallArrivalFrom;
+        std::vector<GATE*> gateList=ptr->GetFallArrivalFrom();
+        ptr=gateList[0];
     }
     //trace back
     std::vector<std::string> pathList;
