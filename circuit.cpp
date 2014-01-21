@@ -163,6 +163,11 @@ void CIRCUIT::CalculateArrivalTime() {
     }
 }
 
+bool Compare(const std::pair<double, GATE*> A,const std::pair<double, GATE*> B)
+{
+    return A.first > B.first;
+}
+
 std::vector<std::string> CIRCUIT::GetLongestPath() {
     std::vector<std::string> pathList;
     std::vector<std::string> tmpList;
@@ -173,6 +178,28 @@ std::vector<std::string> CIRCUIT::GetLongestPath() {
         }
         if (pathList.size()>=5) {
             return pathList;
+        }
+    }
+    if (pathList.size()<5) {
+        std::vector<std::pair<double, GATE*> > ArrivalList;
+        for (unsigned i=0; i<No_PO(); i++) {
+            if (PO_Gate(i)->GetRiseArrivalTime()!=MaxArrivalTimeGATE[0]->GetArrivalTime()) {
+                ArrivalList.push_back(std::pair<double, GATE*>(PO_Gate(i)->GetRiseArrivalTime(),PO_Gate(i)));
+            }
+            if (PO_Gate(i)->GetFallArrivalTime()!=MaxArrivalTimeGATE[0]->GetArrivalTime()) {
+                ArrivalList.push_back(std::pair<double, GATE*>(PO_Gate(i)->GetFallArrivalTime(),PO_Gate(i)));
+            }
+        }
+        std::sort(ArrivalList.begin(), ArrivalList.end(), Compare);
+        for (unsigned i=0; i<ArrivalList.size(); i++) {
+            bool IsRiseSignal=ArrivalList[i].first==ArrivalList[i].second->GetRiseArrivalTime()?true:false;
+            tmpList=ArrivalList[i].second->GetLongestPath(IsRiseSignal);
+            for (unsigned j=0; j<tmpList.size(); j++) {
+                pathList.push_back(tmpList[j]);
+            }
+            if (pathList.size()>=5) {
+                return pathList;
+            }
         }
     }
     return pathList;

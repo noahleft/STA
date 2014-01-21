@@ -233,6 +233,29 @@ std::vector<std::string> GATE::GetLongestPath() {
     return pathList;
 }
 
+std::vector<std::string> GATE::GetLongestPath(bool IsRiseSignal) {
+    
+    std::string path;
+    GATE* ptr=this;
+    // decide trace back from which output
+    if (IsRiseSignal) {
+        IsRiseSignal=true;
+        path="R";
+        std::vector<GATE*> gateList=ptr->GetRiseArrivalFrom();
+        ptr=gateList[0];
+    }
+    else {
+        IsRiseSignal=false;
+        path="F";
+        std::vector<GATE*> gateList=ptr->GetFallArrivalFrom();
+        ptr=gateList[0];
+    }
+    //trace back
+    std::vector<std::string> pathList;
+    TracebackLongestPath(pathList, path, ptr, IsRiseSignal);
+    return pathList;
+}
+
 void GATE::CalculateRequireTime(double t) {
     requireTime=t;
 }

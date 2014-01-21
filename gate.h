@@ -68,6 +68,7 @@ public:
     double GetSlack(){return requireTime-arrivalTime;}
     std::string GetFunc();
     std::vector<std::string> GetLongestPath();
+    std::vector<std::string> GetLongestPath(bool IsRiseSignal);
     bool IsInversion(){return IsInv;}
     std::vector<GATE*> GetRiseArrivalFrom(){return riseArrivalFrom;}
     std::vector<GATE*> GetFallArrivalFrom(){return fallArrivalFrom;}
