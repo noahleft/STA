@@ -60,10 +60,10 @@ void Fileout(string& OutfileName) {
         outfile<<endl;
     }
     
-    vector<string> str;
-    str=circuit.GetLongestPath();
-    for (unsigned i=0; i<str.size(); i++) {
-        outfile<<str[i]<<endl;
+    vector<string> strList;
+    strList=circuit.GetLongestPath();
+    for (unsigned i=0; i<5; i++) {
+        outfile<<strList[i]<<endl;
     }
     
     outfile.close();
